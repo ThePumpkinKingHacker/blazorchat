@@ -1,0 +1,30 @@
+@model SetupModel
+
+<div style="display:flex; height:100%; align-items:center;">
+
+  <form asp-controller="Setup" asp-action="Index" method="post" class="form-signin">
+    <img class="mb-4" src="@Url.Content("skellington.png")" alt="" width="72"
+    height="72">
+    
+    <div style="color:red;">
+      @Html.ValidationSummary()
+    </div>
+
+    <h1 class="h3 mb-3 font-weight-normal">Please create an administrator account</h1>
+    <label asp-for="SetupSecret" class="sr-only">Setup Secret</label>
+    <input asp-for="SetupSecret" type="text" class="form-control" placeholder="Setup Secret" required autofocus />
+    <br />
+
+    <label asp-for="UserName" class="sr-only">User Name</label>
+    <input asp-for="UserName" type="text" class="form-control" placeholder="User Name" required />
+    <br />
+
+    <label asp-for="Password" class="sr-only">Password</label>
+    <input asp-for="Password" type="password" class="form-control" placeholder="Password" required>
+    <label asp-for="ConfirmPassword" class="sr-only">Confirm Password</label>
+    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" required>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Create Account</button>
+    <p class="mt-5 mb-3 text-muted">&copy; 2020</p>
+  </form>
+</div>

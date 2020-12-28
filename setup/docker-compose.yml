@@ -1,0 +1,28 @@
+version: "3.2"
+services:
+  containerchat-sql:
+    container_name: containerchat-sql
+    image: microsoft/mssql-server-linux:2017-latest
+    environment:
+      SA_PASSWORD: "unsafeP@ss831920133Ae33ggda"
+      ACCEPT_EULA: "Y"
+    command: /usr/share/sql/entrypoint.sh
+    volumes:
+      - ./entrypoint.sh:/usr/share/sql/entrypoint.sh
+      - ./InitialSetup.sh:/usr/share/sql/InitialSetup.sh
+      - ./InitialSetup.sql:/usr/share/sql/InitialSetup.sql
+  containerchat-redis:
+    container_name: containerchat-redis
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+  containerchat-web:
+    container_name: containerchat-web
+    image: 'web'
+    ports:
+      - "8080:80"
+    environment:
+      - AppSettings__RedisConnectionString=containerchat-redis
+      - AppSettings__SetupSecret=changeme
+      - ConnectionStrings__DefaultConnection=Server=containerchat-sql,1433;Database=Master;User Id=SA;Password=unsafeP@ss831920133Ae33ggda
+    command: dotnet /app/web.dll

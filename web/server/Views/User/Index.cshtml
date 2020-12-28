@@ -1,0 +1,51 @@
+@model List<UserModel>
+
+@{
+    ViewBag.Link = "Users";
+}
+
+<div class="container" style="text-align:left;">
+    <partial name="_Header" />
+
+    <table class="table table-bordered table-striped table-light">
+        <thead>
+            <tr>
+                <th scope="col">User Name</th>
+                <th scope="col">Role</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.UserName
+                    </td>
+                    <td>
+                        @switch (item.RoleEnum)
+                        {
+                            case 0:
+                                <span>Administrator</span>
+                                break;
+                            case 1:
+                                <span>User</span>
+                                break;
+                            default:
+                                <span>Unknown</span>
+                                break;
+                        }
+                    </td>
+                    <td>
+                        @if (item.UserName != User.Identity.Name)
+                        {
+                            <a asp-action="Delete" asp-controller="User" asp-route-id="@item.ID" style="color:red;">Delete</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a asp-action="Create" asp-asp-controller="User" class="btn btn-primary">Add User</a>
+</div>

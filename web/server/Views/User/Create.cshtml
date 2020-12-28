@@ -1,0 +1,55 @@
+@model UserModel
+
+@{
+    ViewBag.Link = "Users";
+}
+
+<div class="container" style="text-align:left;">
+    <partial name="_Header" />
+    <div class="card">
+        <div class="card-header">
+            Create New User
+        </div>
+        <div class="card-body">
+            <form asp-controller="User" asp-action="Create" method="post">
+                <div style="color:red;">
+                    @Html.ValidationSummary()
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="UserName">User Name</label>
+                    <input id="UserName" asp-for="UserName" type="text" class="form-control" placeholder="User Name" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="RoleEnum">Role</label>
+                    <select asp-for="RoleEnum" class="form-control">
+                        <option value="1">User</option>
+                        <option value="0">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password">Password</label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword">Confirm Password</label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control"
+placeholder="Confirm Password" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Create</button>
+                <a asp-action="Index" asp-controller="User" class="btn btn-dark">Back</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function()
+        {
+            $("#UserName").focus();
+        });
+    </script>
+}

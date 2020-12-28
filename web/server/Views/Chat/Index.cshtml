@@ -1,0 +1,188 @@
+@model List<MessageModel>
+
+@{
+    ViewBag.Link = "Chat";
+}
+<div class="container" style="text-align:left;">
+    <partial name="_Header" />
+    <div class="card border-primary mb-3">
+        <div  id="Chat"  style="height:380px; overflow:auto; display:flex; flex-direction: column-reverse;">
+                @foreach (var item in Model)
+                {
+                    if (item.UserName == User.Identity.Name)
+                    {
+                            <div class="d-flex">
+                                <div style="width:30%">
+
+                                </div>
+                                <div style="width:70%">
+                                    <div class="card-body">
+                                        <div class="card bg-light">
+                                            <div class="card-body">
+                                                <div>
+                                                    <span class="float-right">
+                                                        @item.Date
+                                                    </span>
+                                                    <strong>@item.UserName</strong>
+                                                </div>
+                                                @Html.Raw(item.Content)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    }
+                    else
+                    {
+                            <div class="d-flex">
+                                <div style="width:70%">
+                                    <div class="card-body">
+                                        <div class="card  text-white bg-dark">
+                                            <div class="card-body">
+                                                <div>
+                                                    <span class="float-right">@item.Date</span>
+                                                    <strong>@item.UserName</strong> 
+                                                </div>
+                                                @Html.Raw(item.Content)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="width:30%;">
+
+                                </div>
+                            </div>
+
+
+                    }
+                }  
+            </div>
+        <hr />
+                    <div class="d-flex">
+
+        <div style="width:70%">
+            <div class="card-body">
+                <input id="UserInput" type="text" class="form-control" style="width:100%" onkeyup="SendIfEnter(event)" />
+            </div>
+
+        </div>
+        <div style="width:30%">
+                        <div class="card-body">
+
+            <button class="btn btn-primary" style="width:100%" onclick="Send(event)">Submit</button>
+            </div>
+        </div>
+        </div>
+    </div>
+</div></div></div></a></button>
+
+@section scripts
+{
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script type="text/javascript">Chat
+        var connection = new signalR.HubConnectionBuilder().withUrl("@Url.Content("/chatHub")").build();
+        var currentUser = "@User.Identity.Name";
+
+        connection.on("ReceiveMessage", function (user, date, message) {
+
+            var formattedMessage = "";
+
+            if (user !== currentUser)
+            {
+                formattedMessage = `
+                        <div class="d-flex">
+                            <div style="width:70%">
+                                <div class="card-body">
+                                    <div class="card bg-dark text-white">
+                                        <div class="card-body">
+                                            <div>
+                                                <span class="float-right">
+                                                    ` + date + `
+                                                </span>
+                                                <strong>` + user + `</strong>
+                                            </div>
+                                            ` + message + `
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="width:30%">
+                                
+                                </div>
+                            </div>
+                        </div>`
+            }
+            else
+            {
+                formattedMessage = `
+                        <div class="d-flex">
+                            <div style="width:30%">
+
+                            </div>
+                            <div style="width:70%">
+                                <div class="card-body">
+                                    <div class="card bg-light">
+                                        <div class="card-body">
+                                            <div>
+                                                <span class="float-right">
+                                                    ` + date + `
+                                                </span>
+                                                <strong>` + user + `</strong>
+                                            </div>
+                                            ` + message + `
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`
+            }
+
+
+
+
+            $("#Chat").prepend( formattedMessage);
+            
+        });
+
+        connection.start().then(function () {
+            //document.getElementById("sendButton").disabled = false;
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        $(function()
+        {
+            $("#UserInput").focus();
+        });
+
+        function Send(event)
+        {
+            var text = $("#UserInput").val();
+            if (text!=="")
+            {
+                connection.invoke("SendMessage", text).catch(function (err) {
+                    return console.error(err.toString());
+                });
+
+                $("#UserInput").val("");
+            }
+
+            event.preventDefault();
+        }
+
+        function SendIfEnter(event)
+        {
+             if (event.keyCode === 13) 
+             {
+                event.preventDefault();
+                Send(event);
+            }
+        }
+
+        $(document).ready(function(){
+            $('#Chat').css('height', ($(window).height()-250));
+            });
+            $(window).resize(function(){
+                $('#Chat').css('height', ($(window).height()-250));
+            });
+    </script>
+}

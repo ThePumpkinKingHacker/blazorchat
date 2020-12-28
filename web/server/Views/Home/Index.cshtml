@@ -1,0 +1,20 @@
+@model LoginModel
+<div style="display:flex; height:100%; align-items:center;">
+
+  <form asp-controller="Home" asp-action="Index" method="post" class="form-signin">
+    <img class="mb-4" src="@Url.Content("skellington.png")" alt="" width="72"
+    height="72">
+    <div style="color:red">
+      @Html.ValidationSummary()
+    </div>
+    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    <label asp-for="UserName" class="sr-only">User Name</label>
+    <input asp-for="UserName" type="text" class="form-control" placeholder="User Name" required autofocus>
+
+    <label asp-for="Password" class="sr-only">Password</label>
+    <input asp-for="Password" type="password" class="form-control" placeholder="Password" required>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <p class="mt-5 mb-3 text-muted">&copy; 2020</p>
+  </form>
+</div>
